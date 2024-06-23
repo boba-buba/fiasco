@@ -550,7 +550,7 @@ Dmar_space::remove_from_all_iommus()
 
 PUBLIC
 void
-Dmar_space::destroy(Kobject ***rl) override
+Dmar_space::destroy(Kobject_list *rl) override
 {
   Task::destroy(rl);
   remove_from_all_iommus();

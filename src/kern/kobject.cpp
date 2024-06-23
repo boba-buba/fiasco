@@ -47,6 +47,26 @@ private:
   }
 };
 
+class Kobject_list
+{
+private:
+  Kobject **_t;
+public:
+  Kobject_list(Kobject **t) : _t(t) {}
+  void set_current(Kobject *current) {*_t = current;}
+  void set_next(Kobject **next) {_t = next;}
+  bool empty() const { return *_t == nullptr; }
+  ~Kobject_list()
+  {
+    if (EXPECT_TRUE(empty()))
+    {
+      return;
+    }
+    //???
+    current()->rcu_wait();
+  }
+
+};
 
 //----------------------------------------------------------------------------
 INTERFACE:
@@ -122,11 +142,14 @@ public:
   private:
     Kobject *_h;
     Kobject **_t;
+    Kobject_list *_kobjects;
 
   public:
-    Reap_list() : _h(0), _t(&_h) {}
+    Reap_list() : _h(0), _t(&_h), _kobjects(&_h) {}
     ~Reap_list() { del(); }
-    Kobject ***list() { return &_t; }
+    //Kobject ***list() { return &_t; }
+    Kobject_list *list() {return _kobjects;}
+
     bool empty() const { return _h == nullptr; }
     void del_1();
     void del_2();
@@ -185,18 +208,20 @@ Kobject_mappable::dec_cap_refcnt(Smword diff)
 
 PUBLIC
 void
-Kobject::initiate_deletion(Kobject ***reap_list) override
+Kobject::initiate_deletion(Kobject_list *reap_list) override
 {
   existence_lock.invalidate();
 
   _next_to_reap = 0;
-  **reap_list = this;
-  *reap_list = &_next_to_reap;
+  //**reap_list = this;
+  //*reap_list = &_next_to_reap;
+  reap_list->set_current(this);
+  reap_list->set_next(&_next_to_reap);
 }
 
 PUBLIC virtual
 void
-Kobject::destroy(Kobject ***)
+Kobject::destroy(Kobject_list *)
 {
   LOG_TRACE("Kobject destroy", "des", current(), Log_destroy,
       l->id = dbg_id();

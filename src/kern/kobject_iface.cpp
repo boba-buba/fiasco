@@ -12,6 +12,8 @@ class Ram_quota;
 class Syscall_frame;
 class Utcb;
 
+class Kobject_list;
+
 class Kobject_common : public cxx::Dyn_castable<Kobject_common>
 {
 public:
@@ -21,7 +23,7 @@ public:
 
   virtual bool is_local(Space *) const  = 0;
   virtual Mword obj_id() const  = 0;
-  virtual void initiate_deletion(Kobject ***) = 0;
+  virtual void initiate_deletion(Kobject_list *) = 0;
 
   virtual Kobject_mappable *map_root() = 0;
   virtual ~Kobject_common() = 0;

@@ -276,7 +276,7 @@ Irq_sender::switch_mode(bool is_edge_triggered) override
 
 PUBLIC
 void
-Irq_sender::destroy(Kobject ***rl) override
+Irq_sender::destroy(Kobject_list *rl) override
 {
   auto g = lock_guard(cpu_lock);
   Irq::destroy(rl);
@@ -627,7 +627,7 @@ Irq::Irq(Ram_quota *q) : _q(q)
 
 PUBLIC
 void
-Irq::destroy(Kobject ***rl) override
+Irq::destroy(Kobject_list *rl) override
 {
   // Irq_base::destroy() does unbind(). Therefore call Kobject::destroy() which
   // waits until the existence lock was finally released by the last owner (the

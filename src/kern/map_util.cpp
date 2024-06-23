@@ -386,7 +386,7 @@ Map_traits<Obj_space>::free_object(Obj_space::Phys_addr o,
 {
   if (o->map_root()->no_mappings())
     {
-      o->initiate_deletion(reap_list);
+      o->initiate_deletion(reap_list->list());
       return true;
     }
 
