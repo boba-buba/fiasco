@@ -74,7 +74,7 @@ mem_map(Space *from, L4_fpage const &fp_from,
                         from, from, snd_addr,
                         Pfc(1) << so, to, to,
                         rcv_addr, control.is_grant(), attribs, tlb,
-                        static_cast<Mem_space::Reap_list**>(nullptr));
+                        static_cast<Kobjects_list *>(nullptr));
 }
 
 /** Unmap the mappings in the region described by "fp" from the address
@@ -100,7 +100,7 @@ mem_fpage_unmap(Space *space, L4_fpage fp, L4_map_mask mask)
   Mu::Auto_tlb_flush<Mem_space> tlb;
   return unmap<Mem_space>(mapdb_mem.get(), space, space,
                start, size, fp.rights(), mask, tlb,
-               static_cast<Mem_space::Reap_list**>(nullptr));
+               static_cast<Kobjects_list *>(nullptr));
 }
 
 

@@ -310,7 +310,7 @@ class Map_traits
 public:
   static bool match(L4_fpage const &from, L4_fpage const &to);
   static bool free_object(typename SPACE::Phys_addr o,
-                          typename SPACE::Reap_list **reap_list);
+                          Kobjects_list *reap_list);
 };
 
 
@@ -337,7 +337,7 @@ IMPLEMENT template<typename SPACE>
 inline
 bool
 Map_traits<SPACE>::free_object(typename SPACE::Phys_addr,
-                               typename SPACE::Reap_list **)
+                               Kobjects_list *)
 { return false; }
 
 
@@ -382,7 +382,7 @@ IMPLEMENT template<>
 inline
 bool
 Map_traits<Obj_space>::free_object(Obj_space::Phys_addr o,
-                                   Obj_space::Reap_list **reap_list)
+                                   Kobjects_list *reap_list)
 {
   if (o->map_root()->no_mappings())
     {
@@ -526,7 +526,7 @@ map(MAPDB* mapdb,
     typename SPACE::V_pfn rcv_addr,
     bool grant, typename SPACE::Attr attribs,
     Mu::Auto_tlb_flush<SPACE> &tlb,
-    typename SPACE::Reap_list **reap_list = 0)
+    Kobjects_list *reap_list = 0)
 {
   using namespace Mu;
 
@@ -851,7 +851,7 @@ unmap(MAPDB* mapdb, SPACE* space, Space *space_id,
       L4_fpage::Rights rights,
       L4_map_mask mask,
       Mu::Auto_tlb_flush<SPACE> &tlb,
-      typename SPACE::Reap_list **reap_list)
+      Kobjects_list *reap_list)
 {
   using namespace Mu;
 

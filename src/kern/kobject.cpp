@@ -56,7 +56,7 @@ public:
   void set_current(Kobject *current) {*_t = current;}
   void set_next(Kobject **next) {_t = next;}
   bool empty() const { return *_t == nullptr; }
-  Kobject ***get_list() {return &_t;} //for functions that get input Kobject*** as a parameter, but expect :Reap_list**
+  //Kobject ***get_list() {return &_t;} //for functions that get input Kobject*** as a parameter, but expect :Reap_list**
   ~Kobjects_list()
   {
     if (EXPECT_TRUE(empty()))
@@ -142,13 +142,11 @@ public:
   {
   private:
     Kobject *_h;
-    Kobject **_t;
     Kobjects_list *_kobjects;
 
   public:
-    Reap_list() : _h(0), _t(&_h) {_kobjects = new Kobjects_list(&_h);}
+    Reap_list() : _h(0), _kobjects() {_kobjects->set_current(_h);}
     ~Reap_list() { del(); }
-    //Kobject ***list() { return &_t; }
     Kobjects_list *list() {return _kobjects;}
 
     bool empty() const { return _h == nullptr; }
@@ -298,7 +296,7 @@ Kobject::Reap_list::del_2()
     }
 
   _h = 0;
-  _t = &_h;
+  //_t = &_h;
 }
 
 

@@ -41,7 +41,7 @@ obj_map(Space *from, L4_fpage const &fp_from,
                         snd_size,
                         to, to, Obj_space::V_pfn(rcv_addr),
                         control.is_grant(), attribs, tlb,
-                        reap_list->get_list());
+                        reap_list);
 }
 
 L4_fpage::Rights __attribute__((nonnull(1)))
@@ -59,7 +59,7 @@ obj_fpage_unmap(Space * space, L4_fpage fp, L4_map_mask mask,
   Mu::Auto_tlb_flush<Obj_space> tlb;
   return unmap<Obj_space>(static_cast<Kobject_mapdb*>(nullptr), space, space,
                Obj_space::V_pfn(addr), Obj_space::V_pfc(1) << size,
-               fp.rights(), mask, tlb, reap_list->get_list()); //because here before refactoring was Kobject ***, but function unmap as a parameter accepts Reap_list**. There is some kind of casT I dont get.
+               fp.rights(), mask, tlb, reap_list); //because here before refactoring was Kobject ***, but function unmap as a parameter accepts Reap_list**. There is some kind of casT I dont get.
 }
 
 
@@ -77,7 +77,7 @@ obj_map(Space *from, Cap_index snd_addr, unsigned long snd_size,
 	     from, from, Obj_space::V_pfn(snd_addr),
 	     Cap_diff(snd_size),
 	     to, to, Obj_space::V_pfn(rcv_addr),
-	     grant, attribs, tlb, reap_list->get_list());
+	     grant, attribs, tlb, reap_list);
 }
 
 /**
@@ -88,7 +88,7 @@ obj_map(Space *from, Cap_index snd_addr, unsigned long snd_size,
  */
 bool __attribute__((nonnull(1, 2, 3)))
 map_obj_initially(Kobject_iface *o, Obj_space* to, Space *to_id,
-                  Cap_index rcv_addr, Kobject ***reap_list)
+                  Cap_index rcv_addr, Kobjects_list *reap_list)
 {
   assert(o);
   assert(to);
