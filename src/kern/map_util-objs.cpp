@@ -13,7 +13,7 @@ IMPLEMENTATION:
 L4_error __attribute__((nonnull(1, 3)))
 obj_map(Space *from, L4_fpage const &fp_from,
         Space *to, L4_fpage const &fp_to, L4_msg_item control,
-        Kobject ***reap_list)
+        Kobjects_list *reap_list)
 {
   assert(from);
   assert(to);
@@ -41,12 +41,12 @@ obj_map(Space *from, L4_fpage const &fp_from,
                         snd_size,
                         to, to, Obj_space::V_pfn(rcv_addr),
                         control.is_grant(), attribs, tlb,
-                        reap_list);
+                        reap_list->get_list());
 }
 
 L4_fpage::Rights __attribute__((nonnull(1)))
 obj_fpage_unmap(Space * space, L4_fpage fp, L4_map_mask mask,
-                Kobject ***reap_list)
+                Kobjects_list *reap_list)
 {
   assert(space);
 
@@ -59,14 +59,14 @@ obj_fpage_unmap(Space * space, L4_fpage fp, L4_map_mask mask,
   Mu::Auto_tlb_flush<Obj_space> tlb;
   return unmap<Obj_space>(static_cast<Kobject_mapdb*>(nullptr), space, space,
                Obj_space::V_pfn(addr), Obj_space::V_pfc(1) << size,
-               fp.rights(), mask, tlb, reap_list);
+               fp.rights(), mask, tlb, reap_list->get_list()); //because here before refactoring was Kobject ***, but function unmap as a parameter accepts Reap_list**. There is some kind of casT I dont get.
 }
 
 
 L4_error __attribute__((nonnull(1, 4)))
 obj_map(Space *from, Cap_index snd_addr, unsigned long snd_size,
         Space *to, Cap_index rcv_addr,
-        Kobject ***reap_list, bool grant = false,
+        Kobjects_list *reap_list, bool grant = false,
         Obj_space::Attr attribs = Obj_space::Attr::Full())
 {
   assert(from);
@@ -77,7 +77,7 @@ obj_map(Space *from, Cap_index snd_addr, unsigned long snd_size,
 	     from, from, Obj_space::V_pfn(snd_addr),
 	     Cap_diff(snd_size),
 	     to, to, Obj_space::V_pfn(rcv_addr),
-	     grant, attribs, tlb, reap_list);
+	     grant, attribs, tlb, reap_list->get_list());
 }
 
 /**

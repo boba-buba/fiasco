@@ -60,7 +60,7 @@ Factory::root()
 
 PUBLIC
 void
-Factory::destroy(Kobject_list *rl) override
+Factory::destroy(Kobjects_list *rl) override
 {
   Kobject::destroy(rl);
   take_and_invalidate();

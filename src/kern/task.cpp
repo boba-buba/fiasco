@@ -397,7 +397,7 @@ Task::generic_factory(Ram_quota *q, Space *,
  */
 PUBLIC
 void
-Task::destroy(Kobject_list *reap_list) override
+Task::destroy(Kobjects_list *reap_list) override
 {
   Kobject::destroy(reap_list);
 

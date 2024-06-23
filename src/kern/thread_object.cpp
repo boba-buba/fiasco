@@ -95,7 +95,7 @@ Thread_object::operator delete(void *_t)
 
 PUBLIC
 void
-Thread_object::destroy(Kobject_list *rl) override
+Thread_object::destroy(Kobjects_list *rl) override
 {
   Kobject::destroy(rl);
   if (!is_invalid(false))

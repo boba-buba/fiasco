@@ -47,16 +47,17 @@ private:
   }
 };
 
-class Kobject_list
+class Kobjects_list
 {
 private:
   Kobject **_t;
 public:
-  Kobject_list(Kobject **t) : _t(t) {}
+  Kobjects_list(Kobject **t) : _t(t) {}
   void set_current(Kobject *current) {*_t = current;}
   void set_next(Kobject **next) {_t = next;}
   bool empty() const { return *_t == nullptr; }
-  ~Kobject_list()
+  Kobject ***get_list() {return &_t;} //for functions that get input Kobject*** as a parameter, but expect :Reap_list**
+  ~Kobjects_list()
   {
     if (EXPECT_TRUE(empty()))
     {
@@ -142,13 +143,13 @@ public:
   private:
     Kobject *_h;
     Kobject **_t;
-    Kobject_list *_kobjects;
+    Kobjects_list *_kobjects;
 
   public:
-    Reap_list() : _h(0), _t(&_h), _kobjects(&_h) {}
+    Reap_list() : _h(0), _t(&_h) {_kobjects = new Kobjects_list(&_h);}
     ~Reap_list() { del(); }
     //Kobject ***list() { return &_t; }
-    Kobject_list *list() {return _kobjects;}
+    Kobjects_list *list() {return _kobjects;}
 
     bool empty() const { return _h == nullptr; }
     void del_1();
@@ -208,7 +209,7 @@ Kobject_mappable::dec_cap_refcnt(Smword diff)
 
 PUBLIC
 void
-Kobject::initiate_deletion(Kobject_list *reap_list) override
+Kobject::initiate_deletion(Kobjects_list *reap_list) override
 {
   existence_lock.invalidate();
 
@@ -221,7 +222,7 @@ Kobject::initiate_deletion(Kobject_list *reap_list) override
 
 PUBLIC virtual
 void
-Kobject::destroy(Kobject_list *)
+Kobject::destroy(Kobjects_list *)
 {
   LOG_TRACE("Kobject destroy", "des", current(), Log_destroy,
       l->id = dbg_id();

@@ -386,7 +386,7 @@ Map_traits<Obj_space>::free_object(Obj_space::Phys_addr o,
 {
   if (o->map_root()->no_mappings())
     {
-      o->initiate_deletion(reap_list->list());
+      o->initiate_deletion(reap_list);
       return true;
     }
 
@@ -461,7 +461,7 @@ fpage_map(Space *from, L4_fpage fp_from, Space *to,
 // Don't inline -- it eats too much stack.
 // inline NEEDS ["config.h", io_fpage_unmap]
 L4_fpage::Rights
-fpage_unmap(Space *space, L4_fpage fp, L4_map_mask mask, Kobject ***rl)
+fpage_unmap(Space *space, L4_fpage fp, L4_map_mask mask, Kobjects_list *rl)
 {
   L4_fpage::Rights ret(0);
   Space::Caps caps = space->caps();
