@@ -59,7 +59,7 @@ obj_fpage_unmap(Space * space, L4_fpage fp, L4_map_mask mask,
   Mu::Auto_tlb_flush<Obj_space> tlb;
   return unmap<Obj_space>(static_cast<Kobject_mapdb*>(nullptr), space, space,
                Obj_space::V_pfn(addr), Obj_space::V_pfc(1) << size,
-               fp.rights(), mask, tlb, reap_list); //because here before refactoring was Kobject ***, but function unmap as a parameter accepts Reap_list**. There is some kind of casT I dont get.
+               fp.rights(), mask, tlb, reap_list);
 }
 
 

@@ -56,16 +56,19 @@ public:
   void set_current(Kobject *current) {*_t = current;}
   void set_next(Kobject **next) {_t = next;}
   bool empty() const { return *_t == nullptr; }
-  //Kobject ***get_list() {return &_t;} //for functions that get input Kobject*** as a parameter, but expect :Reap_list**
-  ~Kobjects_list()
+
+  ~Kobjects_list(){ del();}
+
+
+  void del()
   {
     if (EXPECT_TRUE(empty()))
     {
       return;
     }
-    //???
-    current()->rcu_wait();
+    delete _t;
   }
+
 
 };
 
@@ -130,7 +133,8 @@ private:
 
 public:
   using Dyn_castable<Kobject, Kobject_iface>::_cxx_dyn_type;
-
+  friend class Kobjects_list;
+  Kobject *get_next_to_reap(){return _next_to_reap;}
   /**
    * Automatic deletion of a list of kernel objects from the destructor of
    * this class.
@@ -166,6 +170,7 @@ public:
       del_1();
       current()->rcu_wait();
       del_2();
+      delete _kobjects;
     }
   };
 
